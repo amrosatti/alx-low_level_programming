@@ -10,54 +10,38 @@
  */
 int jump_search(int *array, size_t size, int value)
 {
-	int jump, low, idx;
+	int jump, low;
 	char *msg = "Value checked array[%d] = [%d]\n";
 
 	if (!array || !size)
 		return (-1);
 
-	jump = sqrt(size);
-	low = 0;
+	low = jump = 0;
 
-	while (array[min_t(jump, (int) size) - 1] < value)
+	while (array[jump] < value)
 	{
-		idx = min_t(jump, (int) size) - 1;
-		printf(msg, low, array[low]);
-		printf(msg, idx, array[idx]);
+		printf(msg, jump, array[jump]);
 
 		low = jump;
 		jump += sqrt(size);
 
-		if (low >= (int) size)
-			return (-1);
+		if (jump >= (int) size)
+			break;
 	}
 
-	idx = min_t(jump, (int) size);
-	printf("Value found between indexes [%d] and [%d]\n", low, idx);
+	printf("Value found between indexes [%d] and [%d]\n", low, jump);
 
-	while (array[low] < value)
+	while (array[low] <= value && low < (int) size)
 	{
 		printf(msg, low, array[low]);
 
+		if (array[low] == value)
+			return (low);
+
 		low++;
-		if (low == min_t(jump, (int) size))
+		if (low > jump)
 			return (-1);
 	}
 
-	if (array[low] == value)
-		return (low);
-
 	return (-1);
-}
-
-/**
- * min_t - Determines the minimum value
- * @a: ...
- * @b: ...
- *
- * Return: The minimum value
- */
-int min_t(int a, int b)
-{
-	return (a < b ? a : b);
 }
